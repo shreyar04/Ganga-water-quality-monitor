@@ -27,13 +27,17 @@ function ChartPage() {
     const [allData, setAllData] = useState([]);
 
     useEffect(() => {
-        axios.get("http://localhost:1002/allData").then((res) => {
-            // console.log(res.data);
-            setAllData(res.data);
-        });
-    }, []);
+        const fetchData = async () => {
+      try {
+        const res = await axios.get("http://localhost:1002/allData");
+        setAllData(res.data);
+      } catch (err) {
+        console.error("Error fetching data:", err);
+      }}
+      fetchData();
+    },[]);
 
-    console.log(allData);
+    // console.log(allData);
 
     const [selectedState, setSelectedState] = useState(""); // state filter
     const [selectedField, setSelectedField] = useState("TEMP"); // parameter filter
@@ -52,8 +56,8 @@ function ChartPage() {
 
     // Filter data based on selected state
     const filteredData = selectedState
-        ? data.filter((d) => d.STATE === selectedState)
-        : data;
+        ? allData.filter((d) => d.STATE === selectedState)
+        : allData;
 
     // Sort and take last 10 entries
     const sortedData = [...filteredData].sort(
