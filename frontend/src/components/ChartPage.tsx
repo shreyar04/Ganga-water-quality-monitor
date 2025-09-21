@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { data } from "../data/data";
 import axios from "axios";
 import {
     Chart as ChartJS,

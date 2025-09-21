@@ -164,13 +164,7 @@ interface MapHeatmapProps {
     selectedLocation?: string;
 }
 
-const MapHeatmapCombined = ({ selectedLocation }: MapHeatmapProps) => {
-    const mapRef = useRef<HTMLDivElement>(null);
-    const mapInstance = useRef<L.Map | null>(null);
-    const heatLayer = useRef<any>(null);
-    const [selectedParameter, setSelectedParameter] = useState("combined");
-
-    const calculateHealthIndex = (station: (typeof GANGA_STATIONS)[0]) => {
+ const calculateHealthIndex = (station: (typeof GANGA_STATIONS)[0]) => {
         let score = 100;
         if (station.do < 4) score -= 30;
         else if (station.do < 6) score -= 15;
@@ -184,6 +178,29 @@ const MapHeatmapCombined = ({ selectedLocation }: MapHeatmapProps) => {
         return Math.max(0, Math.min(100, score));
     };
 
+const MapHeatmapCombined = () => {
+    const mapRef = useRef<HTMLDivElement>(null);
+    const mapInstance = useRef<L.Map | null>(null);
+    const heatLayer = useRef<any>(null);
+
+    const [selectedParameter, setSelectedParameter] = useState("combined");
+    const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
+    const [selectedLocation, setSelectedLocation] = useState<string>("user");
+
+    // Get user location on load
+    useEffect(() => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                    setUserLocation([pos.coords.latitude, pos.coords.longitude]);
+                },
+                (err) => console.warn("Geolocation not allowed", err),
+                { enableHighAccuracy: true }
+            );
+        }
+    }, []);
+
+    // Init map
     useEffect(() => {
         if (!mapRef.current) return;
 
@@ -193,6 +210,7 @@ const MapHeatmapCombined = ({ selectedLocation }: MapHeatmapProps) => {
             attribution: "© OpenStreetMap contributors",
         }).addTo(mapInstance.current);
 
+        // Fix Leaflet default marker icons
         delete (L.Icon.Default.prototype as any)._getIconUrl;
         L.Icon.Default.mergeOptions({
             iconRetinaUrl:
@@ -209,15 +227,12 @@ const MapHeatmapCombined = ({ selectedLocation }: MapHeatmapProps) => {
         };
     }, []);
 
+    // Handle parameter heatmap update (same as your logic)
     useEffect(() => {
         if (!mapInstance.current) return;
+        if (heatLayer.current) mapInstance.current.removeLayer(heatLayer.current);
 
-        if (heatLayer.current)
-            mapInstance.current.removeLayer(heatLayer.current);
-
-        const selectedParam = PARAMETERS.find(
-            (p) => p.key === selectedParameter
-        );
+        const selectedParam = PARAMETERS.find((p) => p.key === selectedParameter);
         if (!selectedParam) return;
 
         const heatPoints = GANGA_STATIONS.map((station) => {
@@ -226,9 +241,7 @@ const MapHeatmapCombined = ({ selectedLocation }: MapHeatmapProps) => {
                 intensity = calculateHealthIndex(station) / 100;
                 if (!selectedParam.reverse) intensity = 1 - intensity;
             } else {
-                const value = station[
-                    selectedParameter as keyof typeof station
-                ] as number;
+                const value = station[selectedParameter as keyof typeof station] as number;
                 intensity = Math.min(value / selectedParam.max, 1);
                 if (selectedParam.reverse) intensity = 1 - intensity;
             }
@@ -242,6 +255,11 @@ const MapHeatmapCombined = ({ selectedLocation }: MapHeatmapProps) => {
             max: 1.0,
             gradient: { 0: "#22c55e", 0.5: "#eab308", 1: "#ef4444" },
         }).addTo(mapInstance.current);
+
+        // Add user marker
+        if (userLocation) {
+            L.marker(userLocation).addTo(mapInstance.current).bindPopup("You are here");
+        }
 
         // Add Ganga stations markers
         GANGA_STATIONS.forEach((station) => {
@@ -260,79 +278,58 @@ const MapHeatmapCombined = ({ selectedLocation }: MapHeatmapProps) => {
             }).addTo(mapInstance.current!);
 
             marker.bindPopup(`
-        <div class="p-2">
-          <h3 class="font-semibold text-sm mb-2">${station.name}</h3>
-          <div class="space-y-1 text-xs">
-            <div>Health Index: <span class="font-medium">${healthIndex.toFixed(
-                1
-            )}</span></div>
-            <div>DO: <span class="font-medium">${station.do} mg/L</span></div>
-            <div>BOD: <span class="font-medium">${station.bod} mg/L</span></div>
-            <div>pH: <span class="font-medium">${station.ph}</span></div>
-            <div>Fecal Coliform: <span class="font-medium">${station.fecal_coliform.toLocaleString()}</span></div>
-          </div>
-        </div>
-      `);
+              <div class="p-2">
+                <h3 class="font-semibold text-sm mb-2">${station.name}</h3>
+                <div class="text-xs">Health Index: ${healthIndex.toFixed(1)}</div>
+                <div class="text-xs">DO: ${station.do} mg/L</div>
+                <div class="text-xs">BOD: ${station.bod} mg/L</div>
+                <div class="text-xs">pH: ${station.ph}</div>
+                <div class="text-xs">Fecal Coliform: ${station.fecal_coliform.toLocaleString()}</div>
+              </div>
+            `);
         });
 
-        // Add other rivers markers
-        OTHER_RIVERS.forEach((river) => {
-            L.marker([river.lat, river.lng])
-                .addTo(mapInstance.current!)
-                .bindPopup(river.name);
-        });
-
-        // Add Ganga trail
+        // Add river trail
         L.polyline(GANGA_TRAIL, { color: "blue", weight: 4 })
             .addTo(mapInstance.current!)
             .bindPopup("Ganga River Trail");
-    }, [selectedParameter]);
+    }, [selectedParameter, userLocation]);
 
-    const selectedParam = PARAMETERS.find((p) => p.key === selectedParameter);
-    const avgValue =
-        selectedParameter === "combined"
-            ? GANGA_STATIONS.reduce(
-                  (sum, station) => sum + calculateHealthIndex(station),
-                  0
-              ) / GANGA_STATIONS.length
-            : GANGA_STATIONS.reduce(
-                  (sum, station) =>
-                      sum +
-                      (station[
-                          selectedParameter as keyof typeof station
-                      ] as number),
-                  0
-              ) / GANGA_STATIONS.length;
+    // Handle location selection change
+    useEffect(() => {
+        if (!mapInstance.current) return;
+
+        if (selectedLocation === "user" && userLocation) {
+            mapInstance.current.setView(userLocation, 10);
+        } else {
+            const station = GANGA_STATIONS.find((s) => s.name === selectedLocation);
+            if (station) mapInstance.current.setView([station.lat, station.lng], 10);
+        }
+    }, [selectedLocation, userLocation]);
 
     return (
         <Card className="bg-card border-border shadow-card">
             <CardHeader>
                 <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                        <div className="p-2 bg-gradient-primary rounded-lg">
-                            <MapPin className="h-5 w-5 text-white" />
-                        </div>
-                        <div>
-                            <CardTitle className="text-foreground">
-                                Ganga Pollution & River Map
-                            </CardTitle>
-                            <p className="text-sm text-muted-foreground">
-                                Real-time water quality & river trails
-                            </p>
-                        </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                        <Badge
-                            variant="secondary"
-                            className="flex items-center gap-1"
-                        >
-                            <Activity className="h-3 w-3" />
-                            River-wide Avg: {avgValue.toFixed(1)}
-                        </Badge>
-                    </div>
+                    <CardTitle>Ganga Pollution & River Map</CardTitle>
                 </div>
 
-                <div className="flex items-center gap-4 mt-2">
+                {/* Select dropdown for location */}
+                <div className="flex items-center gap-4 mt-3">
+                    <Select value={selectedLocation} onValueChange={setSelectedLocation}>
+                        <SelectTrigger className="w-64">
+                            <SelectValue placeholder="Select Location" />
+                        </SelectTrigger>
+                        <SelectContent className="z-[9999]">
+                            <SelectItem   value="user">📍 My Location</SelectItem>
+                            {GANGA_STATIONS.map((station) => (
+                                <SelectItem key={station.name} value={station.name}>
+                                    {station.name}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+
                     <Select
                         value={selectedParameter}
                         onValueChange={setSelectedParameter}
@@ -340,7 +337,7 @@ const MapHeatmapCombined = ({ selectedLocation }: MapHeatmapProps) => {
                         <SelectTrigger className="w-64">
                             <SelectValue placeholder="Select parameter" />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent className="z-[9999]">
                             {PARAMETERS.map((param) => (
                                 <SelectItem key={param.key} value={param.key}>
                                     {param.label}
@@ -348,21 +345,6 @@ const MapHeatmapCombined = ({ selectedLocation }: MapHeatmapProps) => {
                             ))}
                         </SelectContent>
                     </Select>
-
-                    <div className="flex items-center gap-4 text-sm">
-                        <div className="flex items-center gap-2">
-                            <div className="w-3 h-3 rounded-full bg-safe"></div>
-                            <span>Safe</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <div className="w-3 h-3 rounded-full bg-warning"></div>
-                            <span>Moderate</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <div className="w-3 h-3 rounded-full bg-destructive"></div>
-                            <span>Dangerous</span>
-                        </div>
-                    </div>
                 </div>
             </CardHeader>
 
@@ -376,5 +358,6 @@ const MapHeatmapCombined = ({ selectedLocation }: MapHeatmapProps) => {
         </Card>
     );
 };
+
 
 export default MapHeatmapCombined;

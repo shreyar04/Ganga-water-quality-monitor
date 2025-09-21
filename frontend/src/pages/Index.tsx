@@ -6,8 +6,9 @@ import { AlertsPanel } from '@/components/AlertsPanel';
 import { LocationSelector } from '@/components/LocationSelector';
 import { ParameterChart } from '@/components/ParameterChart';
 import { Waves, Droplets, Activity, AlertTriangle } from 'lucide-react';
-import Map from '@/components/Map'
-import ChartPage from '@/components/ChartPage'
+import Map from '@/components/Map';
+import ChartPage from '@/components/ChartPage';
+import ChatBot from '../components/chatbot/ChatBot';
 
 const Index = () => {
   const [selectedLocation, setSelectedLocation] = useState('Varanasi');
@@ -51,6 +52,9 @@ const Index = () => {
             />
           </div>
 
+
+
+
           {/* Map */}
           <div className="lg:col-span-8">
             <Map/>
@@ -77,7 +81,7 @@ const Index = () => {
               parameter={selectedParameter}
             />
           </div>
-
+          
          
 
         </div>

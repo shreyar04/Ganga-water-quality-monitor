@@ -5,6 +5,7 @@ const WaterQuality = require("./model/ganga");
 
 const express = require("express");
 const mongoose = require("mongoose");
+ const axios = require("axios");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 
@@ -41,6 +42,54 @@ app.get("/allData", async(req, res) => {
     let allData = await WaterQuality.find({});
     res.json(allData);
 });
+
+
+app.get("/get-latlng", async(req,res) => {
+    const {address} = req.query;
+    if (!address) return res.status(400).json({ error: "Address is required" });
+
+  try {
+    const apiKey = process.env.GOOGLE_API_KEY; // store key in .env
+    const response = await axios.get(
+      "https://maps.googleapis.com/maps/api/geocode/json",
+      { params: { address, key: apiKey } }
+    );
+    
+    console.log(response.data);
+    const result = response.data.results[0];
+    if (!result) return res.status(404).json({ error: "Location not found" });
+
+    const { lat, lng } = result.geometry.location;
+    
+    console.log(lat,lng);
+    res.json({ lat, lng });
+    
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to fetch coordinates" });
+  }
+
+})
+
+
+app.get('/predict', async (req, res) => {
+    try {
+        // Call Flask API
+        const response = await axios.get("http://localhost:5000/predictDB");
+
+        // Send predictions back to client
+        res.json({ predictions: response.data.predictions });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ error: 'Failed to fetch predictions' });
+    }
+});
+
+
+app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+});
+
 
 mongoose
     .connect(process.env.MONGO_URL, {
