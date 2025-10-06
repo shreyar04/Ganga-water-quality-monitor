@@ -1,112 +1,612 @@
-import { useState, useEffect } from 'react';
-import { Card } from '@/components/ui/card';
-import { WaterQualityDashboard } from '@/components/WaterQualityDashboard';
-import { GangaHealthIndex } from '@/components/GangaHealthIndex';
-import { AlertsPanel } from '@/components/AlertsPanel';
-import { LocationSelector } from '@/components/LocationSelector';
-import { ParameterChart } from '@/components/ParameterChart';
-import { Waves, Droplets, Activity, AlertTriangle } from 'lucide-react';
-import Map from '@/components/Map';
-import ChartPage from '@/components/ChartPage';
-import ChatBot from '../components/chatbot/ChatBot';
+import { useState, useEffect } from "react";
+import { Card } from "@/components/ui/card";
+import { WaterQualityDashboard } from "@/components/WaterQualityDashboard";
+import { GangaHealthIndex } from "@/components/GangaHealthIndex";
+import { AlertsPanel } from "@/components/AlertsPanel";
+import { LocationSelector } from "@/components/LocationSelector";
+import { ParameterChart } from "@/components/ParameterChart";
+import { Waves, Droplets, Activity, AlertTriangle } from "lucide-react";
+import Map from "@/components/Map";
+import ChartPage from "@/components/ChartPage";
+import ChatBot from "../components/chatbot/ChatBot";
+import { LanguageSelector } from "../components/LanguageSelector";
+import { DownloadButton } from "../components/DownloadBtn";
 
 const Index = () => {
-  const [selectedLocation, setSelectedLocation] = useState('Varanasi');
-  const [selectedParameter, setSelectedParameter] = useState('DO');
-  const [healthIndex, setHealthIndex] = useState(75);
+    const [selectedLocation, setSelectedLocation] = useState("Varanasi");
+    const [selectedParameter, setSelectedParameter] = useState("DO");
+    const [healthIndex, setHealthIndex] = useState(75);
 
-  return (
-    <div className="min-h-screen bg-gradient-water">
-      {/* Header */}
-      <header className="bg-white/90 backdrop-blur-sm shadow-card border-b">
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-gradient-primary rounded-lg">
-              <Waves className="h-6 w-6 text-white animate-water-flow" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold text-foreground">Ganga Water Quality Monitor</h1>
-              <p className="text-muted-foreground">Real-time monitoring and forecasting system</p>
-            </div>
-          </div>
+    return (
+        <div className="min-h-screen bg-gradient-water">
+            {/* Header */}
+            <header className="bg-white/90 backdrop-blur-sm shadow-card border-b">
+                <div className="container mx-auto px-6 py-4">
+                    <div className="flex items-center gap-3">
+                        <div className="p-2 bg-gradient-primary rounded-lg">
+                            <Waves className="h-6 w-6 text-white animate-water-flow" />
+                        </div>
+                        <div>
+                            <h1 className="text-2xl font-bold text-foreground">
+                                Ganga Water Quality Monitor
+                            </h1>
+                            <p className="text-muted-foreground">
+                                Real-time monitoring and forecasting system
+                            </p>
+                        </div>
+
+                        <LanguageSelector />
+                    </div>
+                </div>
+            </header>
+
+            {/* Main Dashboard */}
+            <main className="container mx-auto px-6 py-8">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    {/* Location Selector */}
+                    <div className="lg:col-span-12">
+                        <LocationSelector
+                            selectedLocation={selectedLocation}
+                            onLocationChange={setSelectedLocation}
+                        />
+                    </div>
+
+                    {/* Alerts Panel */}
+                    <div className="lg:col-span-8">
+                        <AlertsPanel location={selectedLocation} />
+                    </div>
+
+                    {/* Health Index */}
+                    <div className="lg:col-span-4">
+                        <GangaHealthIndex
+                            score={healthIndex}
+                            location={selectedLocation}
+                        />
+                    </div>
+
+                    {/* Map */}
+                    <div className="lg:col-span-8">
+                        <Map />
+                    </div>
+                    <div className="lg:col-span-12 flex justify-start mt-4">
+                        <DownloadButton
+                            data={[
+                                {
+                                    STATION_CODE: "1312",
+                                    LOCATIONS:
+                                        "GODAVARI AT JAYAKWADI DAM, AURNAGABAD,MAHARASHTRA",
+                                    STATE: "MAHARASHTRA",
+                                    TEMP: 29.2,
+                                    DO: 6.4,
+                                    pH: 8.1,
+                                    CONDUCTIVITY: 735,
+                                    BOD: 3.4,
+                                    NITRATE_N_NITRITE_N: 2,
+                                    FECAL_COLIFORM: 3,
+                                    TOTAL_COLIFORM: 73,
+                                    DATE: "2025-09-10",
+                                },
+                                {
+                                    STATION_CODE: "2177",
+                                    LOCATIONS:
+                                        "GODAVARI RIVER NEAR SOMESHWAR TEMPLE.",
+                                    STATE: "MAHARASHTRA",
+                                    TEMP: 24.5,
+                                    DO: 6,
+                                    pH: 8,
+                                    CONDUCTIVITY: 270,
+                                    BOD: 3.1,
+                                    NITRATE_N_NITRITE_N: 2,
+                                    FECAL_COLIFORM: 72,
+                                    TOTAL_COLIFORM: 182,
+                                    DATE: "2025-09-15",
+                                },
+                                {
+                                    STATION_CODE: "2182",
+                                    LOCATIONS: "GODAVARI RIVER AT SAIKHEDA.",
+                                    STATE: "MAHARASHTRA",
+                                    TEMP: 25.8,
+                                    DO: 5.5,
+                                    pH: 7.8,
+                                    CONDUCTIVITY: 355,
+                                    BOD: 4.2,
+                                    NITRATE_N_NITRITE_N: 9,
+                                    FECAL_COLIFORM: 59,
+                                    TOTAL_COLIFORM: 133,
+                                    DATE: "2025-09-05",
+                                },
+                                {
+                                    STATION_CODE: "2179",
+                                    LOCATIONS:
+                                        "GODAVARI RIVER AT HANUMAN GHAT, NASHIK CITY.",
+                                    STATE: "MAHARASHTRA",
+                                    TEMP: 24.8,
+                                    DO: 5.5,
+                                    pH: 7.8,
+                                    CONDUCTIVITY: 371,
+                                    BOD: 5.6,
+                                    NITRATE_N_NITRITE_N: 3.55,
+                                    FECAL_COLIFORM: 90,
+                                    TOTAL_COLIFORM: 283,
+                                    DATE: "2025-08-28",
+                                },
+                                {
+                                    STATION_CODE: "2183",
+                                    LOCATIONS:
+                                        "GODAVARI RIVER AT NANDUR- MADMESHWAR DAM.",
+                                    STATE: "MAHARASHTRA",
+                                    TEMP: 25.7,
+                                    DO: 5.7,
+                                    pH: 7.9,
+                                    CONDUCTIVITY: 294,
+                                    BOD: 3.2,
+                                    NITRATE_N_NITRITE_N: 2.69,
+                                    FECAL_COLIFORM: 45,
+                                    TOTAL_COLIFORM: 132,
+                                    DATE: "2025-09-12",
+                                },
+                                {
+                                    STATION_CODE: "2181",
+                                    LOCATIONS:
+                                        "GODAVARI RIVER AT KAPILA- GODAVARI CONFLUENCE POINT, TAPOVAN.",
+                                    STATE: "MAHARASHTRA",
+                                    TEMP: 25,
+                                    DO: 4.5,
+                                    pH: 7.5,
+                                    CONDUCTIVITY: 513,
+                                    BOD: 12.6,
+                                    NITRATE_N_NITRITE_N: 2.3,
+                                    FECAL_COLIFORM: 131,
+                                    TOTAL_COLIFORM: 320,
+                                    DATE: "2025-09-08",
+                                },
+                                {
+                                    STATION_CODE: "2180",
+                                    LOCATIONS: "GODAVARI RIVER NEAR TAPOVAN.",
+                                    STATE: "MAHARASHTRA",
+                                    TEMP: 24.8,
+                                    DO: 5.2,
+                                    pH: 7.7,
+                                    CONDUCTIVITY: 475,
+                                    BOD: 10.3,
+                                    NITRATE_N_NITRITE_N: 1.9,
+                                    FECAL_COLIFORM: 122,
+                                    TOTAL_COLIFORM: 343,
+                                    DATE: "2025-09-03",
+                                },
+                                {
+                                    STATION_CODE: "1096",
+                                    LOCATIONS:
+                                        "GODAVARI AT PANCHAVATI AT RAMKUND,MAHARASHTRA",
+                                    STATE: "MAHARASHTRA",
+                                    TEMP: 26.3,
+                                    DO: 5.6,
+                                    pH: 7.7,
+                                    CONDUCTIVITY: 385,
+                                    BOD: 3.8,
+                                    NITRATE_N_NITRITE_N: 1,
+                                    FECAL_COLIFORM: 110,
+                                    TOTAL_COLIFORM: 292,
+                                    DATE: "2025-08-30",
+                                },
+                                {
+                                    STATION_CODE: "1211",
+                                    LOCATIONS:
+                                        "GODAVARI AT NASIK D/S, MAHARASHTRA",
+                                    STATE: "MAHARASHTRA",
+                                    TEMP: 26.5,
+                                    DO: 5.2,
+                                    pH: 7.8,
+                                    CONDUCTIVITY: 410,
+                                    BOD: 5.2,
+                                    NITRATE_N_NITRITE_N: 1.5,
+                                    FECAL_COLIFORM: 77,
+                                    TOTAL_COLIFORM: 218,
+                                    DATE: "2025-09-18",
+                                },
+                                {
+                                    STATION_CODE: "1095",
+                                    LOCATIONS:
+                                        "GODAVARI AT U/S OF GANGAPUR DAM,NASIK,MAHARASHTRA",
+                                    STATE: "MAHARASHTRA",
+                                    TEMP: 26,
+                                    DO: 6.5,
+                                    pH: 7.8,
+                                    CONDUCTIVITY: 178,
+                                    BOD: 2.5,
+                                    NITRATE_N_NITRITE_N: 1.99,
+                                    FECAL_COLIFORM: 22,
+                                    TOTAL_COLIFORM: 74,
+                                    DATE: "2025-09-07",
+                                },
+                                {
+                                    STATION_CODE: "2160",
+                                    LOCATIONS:
+                                        "GODAVARI RIVER AT U/S OF AURANGABAD RESERVOIR, KAIGAON TOKKA NEAR KAIGAON BRIDGE.",
+                                    STATE: "MAHARASHTRA",
+                                    TEMP: 29.2,
+                                    DO: 6.2,
+                                    pH: 7.9,
+                                    CONDUCTIVITY: 749,
+                                    BOD: 3.5,
+                                    NITRATE_N_NITRITE_N: 1.75,
+                                    FECAL_COLIFORM: 2,
+                                    TOTAL_COLIFORM: 80,
+                                    DATE: "2025-09-14",
+                                },
+                                {
+                                    STATION_CODE: "2158",
+                                    LOCATIONS:
+                                        "GODAVARI RIVER AT U/S OF PAITHAN AT PAITHAN INTAKE PUMP HOUSE AT JAYAKWADI",
+                                    STATE: "MAHARASHTRA",
+                                    TEMP: 29.5,
+                                    DO: 6.4,
+                                    pH: 8,
+                                    CONDUCTIVITY: 834,
+                                    BOD: 4.7,
+                                    NITRATE_N_NITRITE_N: 1.8,
+                                    FECAL_COLIFORM: 2,
+                                    TOTAL_COLIFORM: 77,
+                                    DATE: "2025-09-09",
+                                },
+                                {
+                                    STATION_CODE: "2159",
+                                    LOCATIONS:
+                                        "GODAVARI RIVER AT D/S OF PAITHAN AT PATHEGAON BRIDGE.",
+                                    STATE: "MAHARASHTRA",
+                                    TEMP: 30.2,
+                                    DO: 6.2,
+                                    pH: 8,
+                                    CONDUCTIVITY: 925,
+                                    BOD: 4.2,
+                                    NITRATE_N_NITRITE_N: 6.9,
+                                    FECAL_COLIFORM: 2,
+                                    TOTAL_COLIFORM: 82,
+                                    DATE: "2025-08-29",
+                                },
+                                {
+                                    STATION_CODE: "2161",
+                                    LOCATIONS:
+                                        "GODAVARI RIVER AT JALNA INTAKE WATER PUMP HOUSE, SHAHABAD.",
+                                    STATE: "MAHARASHTRA",
+                                    TEMP: 26.7,
+                                    DO: 6.5,
+                                    pH: 8,
+                                    CONDUCTIVITY: 730,
+                                    BOD: 4,
+                                    NITRATE_N_NITRITE_N: 2.9,
+                                    FECAL_COLIFORM: 2,
+                                    TOTAL_COLIFORM: 78,
+                                    DATE: "2025-09-13",
+                                },
+                                {
+                                    STATION_CODE: "12",
+                                    LOCATIONS:
+                                        "GODAVARI AT DHALEGAON, MAHARASHTRA",
+                                    STATE: "MAHARASHTRA",
+                                    TEMP: 27.2,
+                                    DO: 7,
+                                    pH: 7.9,
+                                    CONDUCTIVITY: 637,
+                                    BOD: 4.7,
+                                    NITRATE_N_NITRITE_N: 6.5,
+                                    FECAL_COLIFORM: 2,
+                                    TOTAL_COLIFORM: 80,
+                                    DATE: "2025-09-17",
+                                },
+                                {
+                                    STATION_CODE: "1209",
+                                    LOCATIONS: "GODAVARI AT RAHER, MAHARASHTRA",
+                                    STATE: "MAHARASHTRA",
+                                    TEMP: 29.7,
+                                    DO: 6.4,
+                                    pH: 8,
+                                    CONDUCTIVITY: 656,
+                                    BOD: 3.6,
+                                    NITRATE_N_NITRITE_N: 1.8,
+                                    FECAL_COLIFORM: 3,
+                                    TOTAL_COLIFORM: 82,
+                                    DATE: "2025-09-01",
+                                },
+                                {
+                                    STATION_CODE: 2157,
+                                    LOCATIONS:
+                                        "GODAVARI RIVER AT LATUR WATER INTAKE NEAR PUMP HOUSE AT DHAMEGAON.",
+                                    STATE: "MAHARASHTRA",
+                                    TEMP: 26,
+                                    DO: 6.6,
+                                    pH: 8.1,
+                                    CONDUCTIVITY: 601,
+                                    BOD: 3.2,
+                                    NITRATE_N_NITRITE_N: 6.75,
+                                    FECAL_COLIFORM: 2,
+                                    TOTAL_COLIFORM: 80,
+                                    DATE: "2025-08-27",
+                                },
+                                {
+                                    STATION_CODE: 2360,
+                                    LOCATIONS: "GODAVARI AT BASARA, ADILABAD",
+                                    STATE: "ANDHRA PRADESH",
+                                    TEMP: 28,
+                                    DO: 5.5,
+                                    pH: 8.1,
+                                    CONDUCTIVITY: 826,
+                                    BOD: 1.7,
+                                    NITRATE_N_NITRITE_N: 1,
+                                    FECAL_COLIFORM: 27,
+                                    TOTAL_COLIFORM: 161,
+                                    DATE: "2025-09-06",
+                                },
+                                {
+                                    STATION_CODE: 2361,
+                                    LOCATIONS:
+                                        "GODAVARI AT MANCHERIAL, NEAR RLY BDG B/C OF RALLAVAGU",
+                                    STATE: "ANDHRA PRADESH",
+                                    TEMP: 31,
+                                    DO: 6.9,
+                                    pH: 9,
+                                    CONDUCTIVITY: 526,
+                                    BOD: 12,
+                                    NITRATE_N_NITRITE_N: 0,
+                                    FECAL_COLIFORM: 130,
+                                    TOTAL_COLIFORM: 285,
+                                    DATE: "2025-09-11",
+                                },
+                                {
+                                    STATION_CODE: 2362,
+                                    LOCATIONS:
+                                        "GODAVARI AT RAMAGUNDAM D/S, NEAR FCI INTAKE WELL, KARIMNAGAR",
+                                    STATE: "ANDHRA PRADESH",
+                                    TEMP: 30,
+                                    DO: 5.7,
+                                    pH: 8.5,
+                                    CONDUCTIVITY: 575,
+                                    BOD: 13,
+                                    NITRATE_N_NITRITE_N: 0,
+                                    FECAL_COLIFORM: 240,
+                                    TOTAL_COLIFORM: 700,
+                                    DATE: "2025-09-02",
+                                },
+                                {
+                                    STATION_CODE: 2363,
+                                    LOCATIONS:
+                                        "GODAVARI AT GODAVARIKHANI, NEAR BATHING GHAT, KARIMNAGAR",
+                                    STATE: "ANDHRA PRADESH",
+                                    TEMP: 30.5,
+                                    DO: 3.2,
+                                    pH: 8.8,
+                                    CONDUCTIVITY: 803,
+                                    BOD: 15,
+                                    NITRATE_N_NITRITE_N: 0,
+                                    FECAL_COLIFORM: 500,
+                                    TOTAL_COLIFORM: 1250,
+                                    DATE: "2025-08-25",
+                                },
+                                {
+                                    STATION_CODE: 2364,
+                                    LOCATIONS:
+                                        "GODAVARI AT RAMAGUNDAM U/S , KARIMNAGAR",
+                                    STATE: "ANDHRA PRADESH",
+                                    TEMP: 30.5,
+                                    DO: 6.7,
+                                    pH: 9,
+                                    CONDUCTIVITY: 531,
+                                    BOD: 12.5,
+                                    NITRATE_N_NITRITE_N: 0,
+                                    FECAL_COLIFORM: 130,
+                                    TOTAL_COLIFORM: 425,
+                                    DATE: "2025-09-16",
+                                },
+                                {
+                                    STATION_CODE: 2356,
+                                    LOCATIONS: "GODAVARI, D/S OF RAMANUGUNDAM",
+                                    STATE: "ANDHRA PRADESH",
+                                    TEMP: 29,
+                                    DO: 4.4,
+                                    pH: 8.5,
+                                    CONDUCTIVITY: 656,
+                                    BOD: 13,
+                                    NITRATE_N_NITRITE_N: 0,
+                                    FECAL_COLIFORM: 300,
+                                    TOTAL_COLIFORM: 500,
+                                    DATE: "2025-08-26",
+                                },
+                                {
+                                    STATION_CODE: 2365,
+                                    LOCATIONS:
+                                        "GODAVARI AT KAMALPUR U/S M/S AP RAYONS LTD. INTAKE WELL, WARANGAL",
+                                    STATE: "ANDHRA PRADESH",
+                                    TEMP: 30,
+                                    DO: 6.1,
+                                    pH: 8.4,
+                                    CONDUCTIVITY: 418,
+                                    BOD: 6.5,
+                                    NITRATE_N_NITRITE_N: 0,
+                                    FECAL_COLIFORM: 300,
+                                    TOTAL_COLIFORM: 500,
+                                    DATE: "2025-09-04",
+                                },
+                                {
+                                    STATION_CODE: 2366,
+                                    LOCATIONS:
+                                        "GODAVARI AT KAMALPUR D/S AT M/S. AP RAYONS LTD. DISCHARGE POINT, WARANGAL",
+                                    STATE: "ANDHRA PRADESH",
+                                    TEMP: 29.5,
+                                    DO: 6.6,
+                                    pH: 8.2,
+                                    CONDUCTIVITY: 421,
+                                    BOD: 4,
+                                    NITRATE_N_NITRITE_N: 0,
+                                    FECAL_COLIFORM: 280,
+                                    TOTAL_COLIFORM: 700,
+                                    DATE: "2025-08-31",
+                                },
+                                {
+                                    STATION_CODE: 13,
+                                    LOCATIONS: "GODAVARI AT MANCHERIAL, A.P.",
+                                    STATE: "ANDHRA PRADESH",
+                                    TEMP: 29.5,
+                                    DO: 4.1,
+                                    pH: 9.1,
+                                    CONDUCTIVITY: 518,
+                                    BOD: 16.5,
+                                    NITRATE_N_NITRITE_N: 0,
+                                    FECAL_COLIFORM: 240,
+                                    TOTAL_COLIFORM: 900,
+                                    DATE: "2025-09-19",
+                                },
+                                {
+                                    STATION_CODE: 1146,
+                                    LOCATIONS: " AT BITHOOR (KANPUR), U.P.",
+                                    STATE: "UTTAR PRADESH",
+                                    TEMP: 27,
+                                    DO: 7.9,
+                                    pH: 8.2,
+                                    CONDUCTIVITY: 290,
+                                    BOD: 3,
+                                    NITRATE_N_NITRITE_N: 0.2,
+                                    FECAL_COLIFORM: 2333,
+                                    TOTAL_COLIFORM: 4256,
+                                    DATE: "2025-09-12",
+                                },
+                                {
+                                    STATION_CODE: 1067,
+                                    LOCATIONS:
+                                        "GANGA AT KANPUR U/S (RANIGHAT), U.P",
+                                    STATE: "UTTAR PRADESH",
+                                    TEMP: 27,
+                                    DO: 7.5,
+                                    pH: 8.2,
+                                    CONDUCTIVITY: 307,
+                                    BOD: 3.4,
+                                    NITRATE_N_NITRITE_N: 0.2,
+                                    FECAL_COLIFORM: 2600,
+                                    TOTAL_COLIFORM: 4856,
+                                    DATE: "2025-08-23",
+                                },
+                                {
+                                    STATION_CODE: 1068,
+                                    LOCATIONS:
+                                        "GANGA AT KANPUR D/S (JAJMAU PUMPING STATION), U.P",
+                                    STATE: "UTTAR PRADESH",
+                                    TEMP: 27,
+                                    DO: 6.3,
+                                    pH: 7.7,
+                                    CONDUCTIVITY: 430,
+                                    BOD: 5.5,
+                                    NITRATE_N_NITRITE_N: 0.3,
+                                    FECAL_COLIFORM: 15889,
+                                    TOTAL_COLIFORM: 54333,
+                                    DATE: "2025-09-08",
+                                },
+                                {
+                                    STATION_CODE: 1147,
+                                    LOCATIONS:
+                                        "GANGA AT DALMAU (RAI BAREILLY), U.P.",
+                                    STATE: "UTTAR PRADESH",
+                                    TEMP: 22.1,
+                                    DO: 8,
+                                    pH: 7.8,
+                                    CONDUCTIVITY: 213,
+                                    BOD: 3.7,
+                                    NITRATE_N_NITRITE_N: 0.8,
+                                    FECAL_COLIFORM: 5517,
+                                    TOTAL_COLIFORM: 8250,
+                                    DATE: "2025-08-22",
+                                },
+                                {
+                                    STATION_CODE: 2498,
+                                    LOCATIONS:
+                                        "GANGGANGAA AT KALA KANKAR, RAEBARELI",
+                                    STATE: "UTTAR PRADESH",
+                                    TEMP: 22.1,
+                                    DO: 8.2,
+                                    pH: 7.8,
+                                    CONDUCTIVITY: 209,
+                                    BOD: 3.6,
+                                    NITRATE_N_NITRITE_N: 0.8,
+                                    FECAL_COLIFORM: 5158,
+                                    TOTAL_COLIFORM: 7967,
+                                    DATE: "2025-09-06",
+                                },
+                                {
+                                    STATION_CODE: 1046,
+                                    LOCATIONS:
+                                        "GANGA AT ALLAHABAD (RASOOLABAD), U.P.",
+                                    STATE: "UTTAR PRADESH",
+                                    TEMP: 24.4,
+                                    DO: 8.7,
+                                    pH: 8.3,
+                                    CONDUCTIVITY: 385,
+                                    BOD: 3.6,
+                                    NITRATE_N_NITRITE_N: 1.7,
+                                    FECAL_COLIFORM: 17283,
+                                    TOTAL_COLIFORM: 29500,
+                                    DATE: "2025-09-11",
+                                },
+                                {
+                                    STATION_CODE: 2487,
+                                    LOCATIONS: "GANGA AT KADAGHAT, ALLAHABAD",
+                                    STATE: "UTTAR PRADESH",
+                                    TEMP: 24.5,
+                                    DO: 8.4,
+                                    pH: 8.3,
+                                    CONDUCTIVITY: 382,
+                                    BOD: 3.9,
+                                    NITRATE_N_NITRITE_N: 1.8,
+                                    FECAL_COLIFORM: 18333,
+                                    TOTAL_COLIFORM: 31833,
+                                    DATE: "2025-08-26",
+                                },
+                            ]}
+                            graphType="sales_chart"
+                            showMultipleFormats={true}
+                        />
+                    </div>
+
+                    {/* Water Quality Dashboard */}
+                    <div className="lg:col-span-8">
+                        <WaterQualityDashboard
+                            location={selectedLocation}
+                            parameter={selectedParameter}
+                            onParameterChange={setSelectedParameter}
+                        />
+                    </div>
+
+                    {/* Parameter Chart */}
+                    <div className="lg:col-span-4">
+                        <ParameterChart
+                            location={selectedLocation}
+                            parameter={selectedParameter}
+                        />
+                    </div>
+                </div>
+            </main>
+
+            {/* Footer */}
+            <footer className="bg-white/80 backdrop-blur-sm border-t mt-12">
+                <div className="container mx-auto px-6 py-6">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                            <Droplets className="h-4 w-4 text-primary" />
+                            <span className="text-sm text-muted-foreground">
+                                Ganga Monitoring System
+                            </span>
+                        </div>
+                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                            <span>
+                                Data updated: {new Date().toLocaleDateString()}
+                            </span>
+                            <div className="flex items-center gap-1">
+                                <Activity className="h-3 w-3 text-safe animate-pulse-glow" />
+                                <span>System Active</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
         </div>
-      </header>
-
-      {/* Main Dashboard */}
-      <main className="container mx-auto px-6 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          
-          {/* Location Selector */}
-          <div className="lg:col-span-12">
-            <LocationSelector 
-              selectedLocation={selectedLocation}
-              onLocationChange={setSelectedLocation}
-            />
-          </div>
-
-          {/* Health Index */}
-          <div className="lg:col-span-4">
-            <GangaHealthIndex 
-              score={healthIndex}
-              location={selectedLocation}
-            />
-          </div>
-
-
-
-
-          {/* Map */}
-          <div className="lg:col-span-8">
-            <Map/>
-          </div>
-
-          {/* Alerts Panel */}
-          <div className="lg:col-span-8">
-            <AlertsPanel location={selectedLocation} />
-          </div>
-
-          {/* Water Quality Dashboard */}
-          <div className="lg:col-span-8">
-            <WaterQualityDashboard 
-              location={selectedLocation}
-              parameter={selectedParameter}
-              onParameterChange={setSelectedParameter}
-            />
-          </div>
-
-          {/* Parameter Chart */}
-          <div className="lg:col-span-4">
-            <ParameterChart 
-              location={selectedLocation}
-              parameter={selectedParameter}
-            />
-          </div>
-          
-         
-
-        </div>
-      </main>
-
-      {/* Footer */}
-      <footer className="bg-white/80 backdrop-blur-sm border-t mt-12">
-        <div className="container mx-auto px-6 py-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Droplets className="h-4 w-4 text-primary" />
-              <span className="text-sm text-muted-foreground">Ganga Monitoring System</span>
-            </div>
-            <div className="flex items-center gap-4 text-sm text-muted-foreground">
-              <span>Data updated: {new Date().toLocaleDateString()}</span>
-              <div className="flex items-center gap-1">
-                <Activity className="h-3 w-3 text-safe animate-pulse-glow" />
-                <span>System Active</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </footer>
-    </div>
-  );
+    );
 };
 
 export default Index;

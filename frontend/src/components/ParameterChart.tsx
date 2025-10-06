@@ -4,6 +4,9 @@ import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Droplets, Thermometer, Activity, AlertTriangle } from 'lucide-react';
 import { waterQualityService, PARAMETER_THRESHOLDS } from '@/services/waterQualityService';
+import { useTranslation } from 'react-i18next';
+
+
 
 interface ParameterChartProps {
   location: string;
@@ -20,6 +23,9 @@ interface ParameterData {
 }
 
 export const ParameterChart = ({ location, parameter }: ParameterChartProps) => {
+    const { t } = useTranslation();
+
+
   const [parameters, setParameters] = useState<ParameterData[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -109,7 +115,8 @@ export const ParameterChart = ({ location, parameter }: ParameterChartProps) => 
             <Activity className="h-5 w-5 text-white" />
           </div>
           <div>
-            <h3 className="text-lg font-semibold">Current Parameters</h3>
+            <h3 className="text-lg font-semibold">{t('parameterChart.title')}</h3>
+
             <p className="text-sm text-muted-foreground">{location}</p>
           </div>
         </div>
@@ -130,7 +137,9 @@ export const ParameterChart = ({ location, parameter }: ParameterChartProps) => 
                     <span className="font-medium text-sm">{param.name}</span>
                   </div>
                   <Badge variant={getStatusBadge(param.status) as any} className="text-xs">
-                    {param.status}
+                                       {t(`healthIndex.${param.status}`)}
+
+
                   </Badge>
                 </div>
                 
@@ -165,19 +174,19 @@ export const ParameterChart = ({ location, parameter }: ParameterChartProps) => 
               <div className="text-lg font-bold text-safe">
                 {parameters.filter(p => p.status === 'safe').length}
               </div>
-              <div className="text-xs text-muted-foreground">Safe</div>
+              <div className="text-xs text-muted-foreground">{t('healthIndex.safe')}</div>
             </div>
             <div>
               <div className="text-lg font-bold text-warning">
                 {parameters.filter(p => p.status === 'warning').length}
               </div>
-              <div className="text-xs text-muted-foreground">Warning</div>
+              <div className="text-xs text-muted-foreground">{t('alerts.warning')}</div>
             </div>
             <div>
               <div className="text-lg font-bold text-destructive">
                 {parameters.filter(p => p.status === 'critical').length}
               </div>
-              <div className="text-xs text-muted-foreground">Critical</div>
+              <div className="text-xs text-muted-foreground">{t('alerts.critical')}</div>
             </div>
           </div>
         </div>

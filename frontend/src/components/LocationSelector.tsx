@@ -1,6 +1,9 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card } from '@/components/ui/card';
 import { MapPin, Navigation } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+
+
 
 interface LocationSelectorProps {
   selectedLocation: string;
@@ -15,6 +18,9 @@ const LOCATIONS = [
 ];
 
 export const LocationSelector = ({ selectedLocation, onLocationChange }: LocationSelectorProps) => {
+    const { t } = useTranslation();
+
+
   return (
     <Card className="p-6 bg-white/80 backdrop-blur-sm shadow-card">
       <div className="flex items-center gap-4">
@@ -22,10 +28,12 @@ export const LocationSelector = ({ selectedLocation, onLocationChange }: Locatio
           <Navigation className="h-5 w-5 text-white" />
         </div>
         <div className="flex-1">
-          <h3 className="text-lg font-semibold text-foreground mb-2">Select Monitoring Location</h3>
+          <h3 className="text-lg font-semibold text-foreground mb-2">{t('locationSelector.title')}</h3>
+
           <Select value={selectedLocation} onValueChange={onLocationChange}>
             <SelectTrigger className="w-64">
-              <SelectValue placeholder="Choose a location" />
+              <SelectValue placeholder={t('locationSelector.placeholder')} />
+
             </SelectTrigger>
             <SelectContent>
               {LOCATIONS.map((location) => (

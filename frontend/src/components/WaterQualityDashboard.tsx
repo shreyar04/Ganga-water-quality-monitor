@@ -5,6 +5,9 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { Activity, Calendar, TrendingUp } from 'lucide-react';
 import { waterQualityService } from '@/services/waterQualityService';
 import ChartPage from './ChartPage';
+import { useTranslation } from 'react-i18next';
+
+
 
 interface WaterQualityDashboardProps {
   location: string;
@@ -13,13 +16,16 @@ interface WaterQualityDashboardProps {
 }
 
 const PARAMETERS = [
-  { value: 'DO', label: 'Dissolved Oxygen (mg/L)', unit: 'mg/L' },
-  { value: 'BOD', label: 'BOD (mg/L)', unit: 'mg/L' },
-  { value: 'NITRATE_N_NITRITE_N', label: 'Nitrate (mg/L)', unit: 'mg/L' },
-  { value: 'FECAL_COLIFORM', label: 'Fecal Coliform (MPN/100ml)', unit: 'MPN/100ml' },
+  { value: 'DO', key: 'DO', unit: 'mg/L' },
+  { value: 'BOD', key: 'BOD', unit: 'mg/L' },
+  { value: 'NITRATE_N_NITRITE_N', key: 'NITRATE_N_NITRITE_N', unit: 'mg/L' },
+  { value: 'FECAL_COLIFORM', key: 'FECAL_COLIFORM', unit: 'MPN/100ml' },
 ];
 
 export const WaterQualityDashboard = ({ location, parameter, onParameterChange }: WaterQualityDashboardProps) => {
+    const { t } = useTranslation();
+
+
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -52,7 +58,8 @@ export const WaterQualityDashboard = ({ location, parameter, onParameterChange }
               <Activity className="h-5 w-5 text-white" />
             </div>
             <div>
-              <h3 className="text-lg font-semibold">Water Quality Trends</h3>
+              <h3 className="text-lg font-semibold">{t('waterQuality.title')}</h3>
+
               <p className="text-sm text-muted-foreground">{location}</p>
             </div>
           </div>

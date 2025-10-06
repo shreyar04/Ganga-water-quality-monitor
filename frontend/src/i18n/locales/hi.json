@@ -1,0 +1,66 @@
+{
+    "header": {
+        "title": "गंगा जल गुणवत्ता मॉनिटर",
+        "subtitle": "रियल-टाइम निगरानी और पूर्वानुमान प्रणाली"
+    },
+    "footer": {
+        "title": "गंगा निगरानी प्रणाली",
+        "dataUpdated": "डेटा अपडेट: {{date}}",
+        "systemActive": "सिस्टम सक्रिय"
+    },
+    "locationSelector": {
+        "title": "स्थान चुनें",
+        "placeholder": "निगरानी स्टेशन चुनें"
+    },
+    "healthIndex": {
+        "title": "गंगा स्वास्थ्य सूचकांक",
+        "outOf": "100 में से",
+        "lastUpdated": "अंतिम अपडेट: {{time}}",
+        "safe": "सुरक्षित",
+        "moderate": "मध्यम",
+        "unsafe": "असुरक्षित"
+    },
+    "waterQuality": {
+        "title": "जल गुणवत्ता रुझान",
+        "historical": "ऐतिहासिक (10 दिन)",
+        "forecast": "पूर्वानुमान (3 दिन)",
+        "updatedEvery": "हर 6 घंटे में अपडेट",
+        "parameters": {
+            "DO": "घुलित ऑक्सीजन (mg/L)",
+            "BOD": "BOD (mg/L)",
+            "NITRATE_N_NITRITE_N": "नाइट्रेट (mg/L)",
+            "FECAL_COLIFORM": "फीकल कोलीफॉर्म (MPN/100ml)"
+        }
+    },
+    "alerts": {
+        "title": "सक्रिय अलर्ट",
+        "active": "{{count}} सक्रिय",
+        "noAlerts": "कोई सक्रिय अलर्ट नहीं",
+        "allNormal": "सभी पैरामीटर सामान्य सीमा में",
+        "current": "वर्तमान: {{value}}",
+        "threshold": "सीमा: {{threshold}}",
+        "critical": "गंभीर",
+        "warning": "चेतावनी",
+        "info": "जानकारी"
+    },
+    "heatmap": {
+        "title": "प्रदूषण हीटमैप",
+        "subtitle": "गंगा नदी में रियल-टाइम प्रदूषण स्तर",
+        "low": "कम प्रदूषण",
+        "moderate": "मध्यम प्रदूषण",
+        "high": "उच्च प्रदूषण",
+        "parameter": "पैरामीटर: {{param}}",
+        "value": "मान: {{value}} {{unit}}"
+    },
+    "parameterChart": {
+        "title": "पैरामीटर विश्लेषण",
+        "trend": "ट्रेंड विश्लेषण",
+        "forecast": "3-दिन पूर्वानुमान"
+    },
+    "common": {
+        "loading": "लोड हो रहा है...",
+        "error": "डेटा लोड करने में त्रुटि",
+        "retry": "पुनः प्रयास",
+        "language": "भाषा"
+    }
+}

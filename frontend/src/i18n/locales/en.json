@@ -1,0 +1,66 @@
+{
+    "header": {
+        "title": "Ganga Water Quality Monitor",
+        "subtitle": "Real-time monitoring and forecasting system"
+    },
+    "footer": {
+        "title": "Ganga Monitoring System",
+        "dataUpdated": "Data updated: {{date}}",
+        "systemActive": "System Active"
+    },
+    "locationSelector": {
+        "title": "Select Location",
+        "placeholder": "Choose a monitoring station"
+    },
+    "healthIndex": {
+        "title": "Ganga Health Index",
+        "outOf": "out of 100",
+        "lastUpdated": "Last updated: {{time}}",
+        "safe": "Safe",
+        "moderate": "Moderate",
+        "unsafe": "Unsafe"
+    },
+    "waterQuality": {
+        "title": "Water Quality Trends",
+        "historical": "Historical (10 days)",
+        "forecast": "Forecast (3 days)",
+        "updatedEvery": "Updated every 6 hours",
+        "parameters": {
+            "DO": "Dissolved Oxygen (mg/L)",
+            "BOD": "BOD (mg/L)",
+            "NITRATE_N_NITRITE_N": "Nitrate (mg/L)",
+            "FECAL_COLIFORM": "Fecal Coliform (MPN/100ml)"
+        }
+    },
+    "alerts": {
+        "title": "Active Alerts",
+        "active": "{{count}} active",
+        "noAlerts": "No active alerts",
+        "allNormal": "All parameters within normal range",
+        "current": "Current: {{value}}",
+        "threshold": "Threshold: {{threshold}}",
+        "critical": "Critical",
+        "warning": "Warning",
+        "info": "Info"
+    },
+    "heatmap": {
+        "title": "Pollution Heatmap",
+        "subtitle": "Real-time pollution levels across Ganga river",
+        "low": "Low Pollution",
+        "moderate": "Moderate Pollution",
+        "high": "High Pollution",
+        "parameter": "Parameter: {{param}}",
+        "value": "Value: {{value}} {{unit}}"
+    },
+    "parameterChart": {
+        "title": "Parameter Analysis",
+        "trend": "Trend Analysis",
+        "forecast": "3-Day Forecast"
+    },
+    "common": {
+        "loading": "Loading...",
+        "error": "Error loading data",
+        "retry": "Retry",
+        "language": "Language"
+    }
+}

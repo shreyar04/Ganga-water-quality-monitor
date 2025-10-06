@@ -27,14 +27,15 @@ function ChartPage() {
 
     useEffect(() => {
         const fetchData = async () => {
-      try {
-        const res = await axios.get("http://localhost:1002/allData");
-        setAllData(res.data);
-      } catch (err) {
-        console.error("Error fetching data:", err);
-      }}
-      fetchData();
-    },[]);
+            try {
+                const res = await axios.get("http://localhost:1002/allData");
+                setAllData(res.data);
+            } catch (err) {
+                console.error("Error fetching data:", err);
+            }
+        };
+        fetchData();
+    }, []);
 
     // console.log(allData);
 
@@ -64,13 +65,36 @@ function ChartPage() {
     );
     const last10Days = sortedData.slice(-10);
 
-    // Chart data
+    let extendedLast10Days = [...last10Days];
+
+    // Add future data after calculating last10Days
+    if (selectedField === "DO") {
+        extendedLast10Days = [
+            ...last10Days,
+            { STATION_CODE: "Extra1", DO: 5.78102303 },
+            { STATION_CODE: "Extra2", DO: 5.78287705 },
+            { STATION_CODE: "Extra3", DO: 5.75172226 },
+        ];
+    }
+
+    if (selectedField === "BOD") {
+        extendedLast10Days = [
+            ...last10Days,
+            { STATION_CODE: "Extra1", BOD: 3.765 },
+            { STATION_CODE: "Extra2", BOD: 5.782 },
+            { STATION_CODE: "Extra3", BOD: 5.751 },
+        ];
+    }
+
+    // Update chartData to use extendedLast10Days
     const chartData = {
-        labels: last10Days.map((station) => station.STATION_CODE),
+        labels: extendedLast10Days.map((station) => station.STATION_CODE),
         datasets: [
             {
                 label: selectedField,
-                data: last10Days.map((station) => station[selectedField]),
+                data: extendedLast10Days.map(
+                    (station) => station[selectedField]
+                ),
                 borderColor: "rgb(75, 192, 192)",
                 backgroundColor: "rgba(75, 192, 192, 0.5)",
             },

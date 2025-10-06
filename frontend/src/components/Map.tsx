@@ -1,4 +1,7 @@
 import { useEffect, useRef, useState } from "react";
+import { useTranslation } from 'react-i18next';
+
+
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet.heat";
@@ -179,6 +182,9 @@ interface MapHeatmapProps {
     };
 
 const MapHeatmapCombined = () => {
+      const { t } = useTranslation();
+
+
     const mapRef = useRef<HTMLDivElement>(null);
     const mapInstance = useRef<L.Map | null>(null);
     const heatLayer = useRef<any>(null);
@@ -311,7 +317,10 @@ const MapHeatmapCombined = () => {
         <Card className="bg-card border-border shadow-card">
             <CardHeader>
                 <div className="flex items-center justify-between">
-                    <CardTitle>Ganga Pollution & River Map</CardTitle>
+              <CardTitle className="text-foreground">{t('heatmap.title')}</CardTitle>
+              <p className="text-sm text-muted-foreground">{t('heatmap.subtitle')}</p>
+
+
                 </div>
 
                 {/* Select dropdown for location */}
