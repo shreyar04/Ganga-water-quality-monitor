@@ -100,7 +100,7 @@ Visualization| Charts + Maps |
 ## 🧪 Run Locally
 
 ```bash
-git clone https://github.com/sansita0704/ganga-water-quality-monitor.git
+git clone https://github.com/shreyar04/Ganga-water-quality-monitor.git
 cd ganga-water-quality-monitor
 npm install
 npm start
